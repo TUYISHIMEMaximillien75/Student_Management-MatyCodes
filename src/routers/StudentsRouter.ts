@@ -10,13 +10,10 @@ const controller = new Controllers();
 const router: Router = express.Router();
 
 
-// ✅ Public route
 router.post("/login", controller.login);
 
-// ✅ Public signup
 router.post("/users", controller.users);
 
-// 🔐 Only ADMIN can create admin users
 router.post(
   "/usersadmin",
   verifyToken,
@@ -24,14 +21,12 @@ router.post(
   controller.usersAdmin
 );
 
-// 🔐 Any authenticated user
 router.get(
   "/profile",
   verifyToken,
   controller.profile
 );
 
-// 🔐 Teacher or Admin can view students
 router.get(
   "/students",
   verifyToken,
@@ -39,30 +34,27 @@ router.get(
   controller.allProducts
 );
 
-// 🔐 Teacher can mark attendance
 router.post(
   "/attendance",
   verifyToken,
   allowRoles("teacher"),
-  validateUser(attendanceValSchema, "body"), // ✅ Joi here
+  validateUser(attendanceValSchema, "body"),  
   controller.attendance
 );
 
-// 🔐 Teacher or Admin can update leave (PUT)
 router.put(
   "/leaves",
   verifyToken,
   allowRoles("teacher", "admin"),
-  validateUser(attendanceValSchema, "body"), // example reuse
+  validateUser(attendanceValSchema, "body"),
   controller.leave
 );
 
-// 🔐 Admin creates leave
 router.post(
   "/leaves",
   verifyToken,
   allowRoles("admin"),
-  validateUser(leaveValSchema, "body"), // ✅ Joi here
+  validateUser(leaveValSchema, "body"), 
   controller.setLeave
 );
 
